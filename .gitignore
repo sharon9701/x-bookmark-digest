@@ -1,0 +1,6 @@
+data/
+runs/
+config.json
+*.lock
+scripts/__pycache__/
+*.pyc

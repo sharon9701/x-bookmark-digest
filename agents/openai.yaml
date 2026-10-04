@@ -1,0 +1,4 @@
+interface:
+  display_name: "X Bookmarks + Likes Digest"
+  short_description: "把 X 的喜欢和书签变成每天 3 条一组、带原贴与配图的可操作阅读卡片"
+  default_prompt: "使用 $x-bookmark-digest 只同步我已授权 X 账号的书签和喜欢/点赞；首次设置每日自动化时先询问我的推送时间、时区和频率，默认每组 3 条聊天卡片推送，让我按顺序选择 read、keep、Obsidian 或调整分类。"

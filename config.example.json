@@ -1,0 +1,20 @@
+{
+  "categories": [
+    {"name": "工具与产品", "description": "软件、服务、产品设计、自动化和开发工具。", "keywords": ["tool", "product", "software", "automation"]},
+    {"name": "研究与学习", "description": "教程、论文、课程、方法和研究资料。", "keywords": ["tutorial", "paper", "course", "research"]},
+    {"name": "行业与市场", "description": "行业动态、公司、商业模式、市场和投资研究。", "keywords": ["industry", "market", "company", "business"]},
+    {"name": "工作与成长", "description": "表达、写作、管理、职业能力和个人成长。", "keywords": ["writing", "management", "career", "productivity"]}
+  ],
+  "defaults": {
+    "sync_limit": 200,
+    "digest_hours": 24,
+    "digest_window": "previous_day",
+    "digest_max_items": 50,
+    "timezone": "Asia/Shanghai",
+    "schedule": {"time": "", "days": "daily"},
+    "expected_username": "",
+    "database": "~/.local/share/x-bookmark-digest/state.sqlite3",
+    "draft_dir": "~/.local/share/x-bookmark-digest/drafts",
+    "obsidian_vault": ""
+  }
+}
