@@ -55,19 +55,18 @@ python3 scripts/x_bookmark_digest.py review-start \
 
 ## 聊天卡片和动作
 
-默认每批 3 张卡片，按顺序等待用户回复后再推送下一批。卡片保留原贴标题、作者、来源、原帖链接、可用媒体、摘要和要点；回复协议见 [交互契约](references/interaction-contract.md)。
+默认一次只推送 1 张卡片。用户只回复当前卡片的动作，处理完成后再推送下一条，不需要选择第几条。卡片保留原贴标题、作者、来源、原帖链接、可用媒体、摘要和要点；回复协议见 [交互契约](references/interaction-contract.md)。
 
 ```bash
-python3 scripts/x_bookmark_digest.py cards \
-  --annotations runs/annotations.json --start 1 --count 3 --processed 0
+python3 scripts/x_bookmark_digest.py card \
+  --annotations runs/annotations.json \
+  --session runs/review-session.json
 ```
 
-用户按顺序回复：
+用户直接回复动作：
 
 ```text
 2
-3
-4｜工具与产品
 ```
 
 四个动作固定为：
@@ -77,7 +76,7 @@ python3 scripts/x_bookmark_digest.py cards \
 3. `3`：纳入 Obsidian；未配置 Vault 时生成待导入 Markdown；
 4. `4 分类名`：调整分类。
 
-Agent 先将回复解析为 decisions，再使用 `review-batch` 写入本地状态和必要的外部副作用。状态、幂等、失败恢复和远程移除规则见 [状态与安全](references/state-and-safety.md)。
+处理成功后继续调用 `card --session` 推送下一条。只有用户明确要求批量处理时，才使用 `cards`、多行回复和 `review-batch`。状态、幂等、失败恢复和远程移除规则见 [状态与安全](references/state-and-safety.md)。
 
 ## 定时推送
 

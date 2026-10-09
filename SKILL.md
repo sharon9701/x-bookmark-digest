@@ -3,7 +3,7 @@ name: x-bookmark-digest
 description: >
   把你在 X 上点过喜欢、存进书签的内容，变成每天可消化的个人阅读收件箱：
   只抓 Bookmarks 和 Likes，按新增内容去重，保留原贴标题与可用配图，
-  再拆成 3 条一组的交互卡片，让你直接选择 read、keep、纳入 Obsidian 或调整分类。
+  每次推出一张交互卡片，让你直接选择 read、keep、纳入 Obsidian 或调整分类。
   适用于本人或已授权的 X 账号；不读取时间线，不自动发布，也不默认移出 X 内容。
 ---
 
@@ -19,7 +19,7 @@ description: >
 - 每日 digest 默认只处理上一自然日首次同步发现的新增条目；不会把账号已有的全部收藏重新翻出。
 - 当前 `opencli` 只返回收藏/喜欢列表，没有“何时加入书签/点喜欢”的可靠时间戳，因此 `first_seen_at` 是本地发现时间代理；要做到严格事件时间，适配器必须提供 `source_added_at`。
 - `sync` 输出里的 `new` 只表示本地首次出现的推文 ID，不等于今天新点了多少喜欢；同时查看 `new_source_memberships` 和 `pending.diagnostics`。
-- `1`、`2`、`3`、`4` 是唯一用户动作；批量模式只是把多个动作放在同一条回复中。
+- `1`、`2`、`3`、`4` 是唯一用户动作；默认一次只处理一条，不要求用户选择第几条。
 
 ## 推送时间门槛
 
@@ -81,22 +81,25 @@ python3 scripts/x_bookmark_digest.py review-start \
 
 ## 聊天交互
 
-默认使用 `batch` 模式，每组 3 条；短、无媒体的队列可以使用 5 条。用户明确要求逐条时切换 `single`。小批量不是整批信息流：每组完成选择后才发送下一组。
+默认使用 `single` 模式：每次只发送队列中的下一条卡片，等待用户回复一个动作后才发送下一条。不要同时发送多条卡片，也不要询问用户“选择第几条”。只有用户明确要求批量时，才切换为 `batch`。
 
 ```bash
-python3 scripts/x_bookmark_digest.py cards \
-  --annotations runs/annotations.json --start 1 --count 3 --processed 0
+python3 scripts/x_bookmark_digest.py card \
+  --annotations runs/annotations.json \
+  --session runs/review-session.json
 ```
 
 卡片必须保留：原贴标题、作者、分类、来源、原帖链接、可用媒体、摘要、要点和四个动作。配图按尽力展示处理；加载失败时保留原媒体链接和原帖链接，不伪造本地图片。格式契约见 [references/interaction-contract.md](references/interaction-contract.md)。
 
-用户可以按卡片顺序一次回复：
+默认每次只回复当前卡片的一个动作：
 
 ```text
 2
-3
-4｜工具与产品
 ```
+
+用户回复 `1`、`2`、`3` 或 `4 分类名` 后，Agent 应将当前卡片的决定写入队列，再调用 `card --session` 推送下一条。不要要求用户在回复中标记卡片序号。
+
+批量模式是显式的高级选项。只有用户主动要求批量时，Agent 才使用 `cards`、多行决定和 `review-batch`：
 
 Agent 应将回复解析为有序 decisions JSON，再调用：
 
@@ -117,7 +120,7 @@ python3 scripts/x_bookmark_digest.py review-batch \
   --decisions runs/decisions.json
 ```
 
-`review-batch` 按顺序执行；任一条失败就停止，后续决定不执行，并保留当前队列位置。动作语义固定为：
+`review-batch` 按顺序执行；任一条失败就停止，后续决定不执行，并保留当前队列位置。默认单卡片则使用 `review-apply`。动作语义固定为：
 
 1. `read`：移出当前存在的书签/喜欢来源；需要带 `--confirm READ:<ID>`；成功后不再提醒。
 2. `keep`：状态设为 `keep`，更新提醒时间，保留到下一个 digest 窗口。
