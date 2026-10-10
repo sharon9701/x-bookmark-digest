@@ -55,7 +55,7 @@ python3 scripts/x_bookmark_digest.py review-start \
 
 ## 聊天卡片和动作
 
-默认一次只推送 1 张卡片。用户只回复当前卡片的动作，处理完成后再推送下一条，不需要选择第几条。卡片保留原贴标题、作者、来源、原帖链接、可用媒体、摘要和要点；回复协议见 [交互契约](references/interaction-contract.md)。
+默认一次只推送 1 张卡片。用户只回复当前卡片的动作，处理完成后再推送下一条，不需要选择第几条。卡片保留原贴标题、作者、来源、原帖链接、媒体提示、摘要和要点；默认不内嵌 X 远程图片，避免聊天宿主出现破图占位符。图片仍保留数量提示和打开链接，回复协议见 [交互契约](references/interaction-contract.md)。如目标宿主确认支持 X CDN，可在 `defaults.inline_media_previews` 设为 `true` 后试用内嵌预览。
 
 ```bash
 python3 scripts/x_bookmark_digest.py card \

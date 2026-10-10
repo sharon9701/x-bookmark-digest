@@ -133,10 +133,26 @@ class DigestTests(unittest.TestCase):
         }
         output = digest.render(annotations)
         self.assertIn("### 1. 原贴第一行", output)
-        self.assertIn("format=jpg&name=large", output)
+        self.assertIn("原贴包含配图", output)
+        self.assertIn("打开原贴图片", output)
+        self.assertNotIn("![原贴配图", output)
         self.assertIn("播放/打开媒体", output)
         self.assertIn("要点：", output)
         self.assertNotIn("合计≤200字", output)
+
+    def test_render_can_enable_inline_media_previews_explicitly(self):
+        annotations = {
+            "items": [{
+                "id": "1", "title": "原贴第一行", "category": TEST_CATEGORY, "secondary_category": None,
+                "confidence": 0.9, "summary": "摘要", "key_points": ["要点"],
+                "recommended_action": "阅读", "priority": 2,
+                "url": "https://x.com/i/status/1", "author": "author", "sources": ["like"],
+                "media_urls": ["https://pbs.twimg.com/media/abc.jpg"],
+            }]
+        }
+        with patch.object(digest, "defaults", return_value={"inline_media_previews": True}):
+            output = digest.render(annotations)
+        self.assertIn("![原贴配图 1](https://pbs.twimg.com/media/abc.jpg?format=jpg&name=large)", output)
 
     def test_render_card_has_queue_progress_and_four_actions(self):
         annotations = {

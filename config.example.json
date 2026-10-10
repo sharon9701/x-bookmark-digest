@@ -11,6 +11,7 @@
     "digest_window": "previous_day",
     "digest_max_items": 50,
     "timezone": "Asia/Shanghai",
+    "inline_media_previews": false,
     "schedule": {"time": "", "days": "daily"},
     "expected_username": "",
     "database": "~/.local/share/x-bookmark-digest/state.sqlite3",

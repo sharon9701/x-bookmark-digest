@@ -607,7 +607,8 @@ def media_lines(item: dict[str, Any]) -> list[str]:
     urls = item.get("media_urls") or []
     if not urls:
         return []
-    lines = ["媒体预览："]
+    inline_previews = bool(defaults().get("inline_media_previews", False))
+    lines = ["媒体："]
     for index, raw_url in enumerate(urls, 1):
         url = str(raw_url)
         preview = media_url_for_preview(url)
@@ -615,8 +616,12 @@ def media_lines(item: dict[str, Any]) -> list[str]:
         if any(ext in lower for ext in (".mp4", ".mov", ".webm", "video.twimg.com")):
             lines.append(f"- 视频 {index}：[播放/打开媒体]({url})")
         elif any(ext in lower for ext in (".jpg", ".jpeg", ".png", ".gif", ".webp")) or "pbs.twimg.com/media/" in lower:
-            lines.append(f"![原贴配图 {index}]({preview})")
-            lines.append(f"  [图片加载失败时打开媒体链接]({url})")
+            if inline_previews:
+                lines.append(f"![原贴配图 {index}]({preview})")
+                lines.append(f"  [图片加载失败时打开媒体链接]({url})")
+            else:
+                lines.append(f"- 图片 {index}：原贴包含配图（聊天内嵌已关闭，请打开原帖查看）")
+                lines.append(f"  [打开原贴图片]({url})")
         else:
             lines.append(f"- 媒体 {index}：[打开媒体]({url})")
     return lines

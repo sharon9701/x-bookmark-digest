@@ -51,6 +51,8 @@ python3 scripts/doctor.py --skip-auth
 - Obsidian 写入能力；
 - 远程写操作审批。
 
+媒体兼容性：不同 Agent 宿主对远程图片、跨域和 X CDN 的支持不同。`defaults.inline_media_previews` 默认为 `false`，因此分享包应使用文字提示和原帖链接作为稳定回退；只有目标宿主已经验证可加载 `pbs.twimg.com` 时才由用户显式开启。
+
 建议将连接器实现为 `fetch_sources()`、`remove_source()`、`whoami()` 三个窄接口，核心逻辑不要直接依赖某个 Agent 的 UI。
 
 ## Sharing forms

@@ -89,7 +89,7 @@ python3 scripts/x_bookmark_digest.py card \
   --session runs/review-session.json
 ```
 
-卡片必须保留：原贴标题、作者、分类、来源、原帖链接、可用媒体、摘要、要点和四个动作。配图按尽力展示处理；加载失败时保留原媒体链接和原帖链接，不伪造本地图片。格式契约见 [references/interaction-contract.md](references/interaction-contract.md)。
+卡片必须保留：原贴标题、作者、分类、来源、原帖链接、媒体提示、摘要、要点和四个动作。默认不在聊天内嵌 X 远程图片：图片 CDN 或宿主远程媒体加载不稳定时，只显示配图数量提示并保留原帖/媒体链接，避免破图占位符。只有用户或宿主明确确认远程图片可稳定加载时，才在 `defaults.inline_media_previews` 设为 `true` 后尝试内嵌；不伪造本地图片。格式契约见 [references/interaction-contract.md](references/interaction-contract.md)。
 
 默认每次只回复当前卡片的一个动作：
 
