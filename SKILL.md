@@ -11,6 +11,10 @@ description: >
 
 这是一个带本地状态、可恢复队列和聊天交互的 X 阅读队列 Skill。核心规则在本文件，细节按需读取 references；确定性的状态变更优先调用 `scripts/x_bookmark_digest.py`，不要让 Agent 手工改 SQLite 或 session JSON。
 
+## 试跑反馈与修改协议
+
+试跑发现某类结果有问题时，不得只围绕触发反馈的案例加特判。先抽象共同机制，再修改对应的规则层；随后分析所有受影响的输入、模式、边界、宿主和副作用，并用覆盖不同方向的 3–5 个场景回归。原案例通过只是必要条件。完整流程与记录模板见 [references/modification-protocol.md](references/modification-protocol.md)。
+
 ## 适用范围
 
 - 只读取当前已验证账号的 `bookmarks` 和 `likes` 两个栏目；同一推文按 ID 合并，保留全部来源。
@@ -151,5 +155,6 @@ python3 scripts/x_bookmark_digest.py review-batch \
 - `references/interaction-contract.md`：single/batch 卡片与回复协议。
 - `references/state-and-safety.md`：状态、幂等、claim、远程修改和恢复。
 - `references/portability.md`：安装、配置、跨 Agent 和分发。
+- `references/modification-protocol.md`：试跑反馈的通用抽象、影响面分析和覆盖型回归协议。
 - `scripts/`：确定性执行和诊断。
 - `data/`、`runs/`：本地私有运行数据，禁止分发。

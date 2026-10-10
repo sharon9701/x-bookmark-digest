@@ -53,6 +53,10 @@ python3 scripts/x_bookmark_digest.py review-start \
 
 手动试跑可以直接说“现在推送”或“试跑一次”；不需要先设置长期推送时间。
 
+## 试跑问题如何修复
+
+如果试跑发现某类结果有问题，Skill 会先定位共同机制，再修改规则层，检查影响面，并用 3–5 个不同方向的场景回归。不会只为当前案例添加特判。详细协议见 [修改协议](references/modification-protocol.md)。
+
 ## 聊天卡片和动作
 
 默认一次只推送 1 张卡片。用户只回复当前卡片的动作，处理完成后再推送下一条，不需要选择第几条。卡片保留原贴标题、作者、来源、原帖链接、媒体提示、摘要和要点；默认不内嵌 X 远程图片，避免聊天宿主出现破图占位符。图片仍保留数量提示和打开链接，回复协议见 [交互契约](references/interaction-contract.md)。如目标宿主确认支持 X CDN，可在 `defaults.inline_media_previews` 设为 `true` 后试用内嵌预览。
