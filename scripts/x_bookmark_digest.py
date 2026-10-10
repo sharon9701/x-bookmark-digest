@@ -609,23 +609,22 @@ def media_lines(item: dict[str, Any]) -> list[str]:
         return []
     inline_previews = bool(defaults().get("inline_media_previews", False))
     lines = ["媒体："]
-    entries: list[tuple[int, str, str, bool]] = []
+    entries: list[tuple[int, str, str, str]] = []
     for index, raw_url in enumerate(urls, 1):
         url = str(raw_url)
         preview = media_url_for_preview(url)
         lower = url.lower()
         is_video = any(ext in lower for ext in (".mp4", ".mov", ".webm", "video.twimg.com"))
         is_image = any(ext in lower for ext in (".jpg", ".jpeg", ".png", ".gif", ".webp")) or "pbs.twimg.com/media/" in lower
-        entries.append((index, url, preview, is_video if not is_image else False))
-    image_entries = [entry for entry in entries if not entry[3] and (any(ext in entry[1].lower() for ext in (".jpg", ".jpeg", ".png", ".gif", ".webp")) or "pbs.twimg.com/media/" in entry[1].lower())]
+        kind = "video" if is_video else "image" if is_image else "media"
+        entries.append((index, url, preview, kind))
+    image_entries = [entry for entry in entries if entry[3] == "image"]
     if image_entries and not inline_previews:
         lines.append(f"- 原贴包含 {len(image_entries)} 张配图（聊天内嵌已关闭，请打开原帖查看）")
-    for index, url, preview, is_video in entries:
-        lower = url.lower()
-        is_image = any(ext in lower for ext in (".jpg", ".jpeg", ".png", ".gif", ".webp")) or "pbs.twimg.com/media/" in lower
-        if is_video:
+    for index, url, preview, kind in entries:
+        if kind == "video":
             lines.append(f"- 视频 {index}：[播放/打开媒体]({url})")
-        elif is_image:
+        elif kind == "image":
             if inline_previews:
                 lines.append(f"![原贴配图 {index}]({preview})")
                 lines.append(f"  [图片加载失败时打开媒体链接]({url})")
