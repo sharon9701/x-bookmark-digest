@@ -133,7 +133,7 @@ class DigestTests(unittest.TestCase):
         }
         output = digest.render(annotations)
         self.assertIn("### 1. 原贴第一行", output)
-        self.assertIn("原贴包含配图", output)
+        self.assertIn("原贴包含 1 张配图", output)
         self.assertIn("打开原贴图片", output)
         self.assertNotIn("![原贴配图", output)
         self.assertIn("播放/打开媒体", output)
